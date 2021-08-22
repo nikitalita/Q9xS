@@ -2,13 +2,126 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    <StartupObject>Q9xS.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DiscUtils" Version="0.16.0-alpha0017" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Markdown" Version="2.2.1" />
+    <PackageReference Include="UnshieldSharp" Version="1.6.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="layouts\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="DiscUtils">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.BootConfig">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.BootConfig.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Btrfs">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Btrfs.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Core">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Dmg">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Dmg.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Ext">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Ext.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Fat">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Fat.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.HfsPlus">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.HfsPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Iscsi">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Iscsi.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Iso9660">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Iso9660.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Lvm">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Lvm.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Net">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Nfs">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Nfs.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Ntfs">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Ntfs.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.OpticalDiscSharing">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.OpticalDiscSharing.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.OpticalDisk">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.OpticalDisk.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Registry">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Sdi">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Sdi.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.SquashFs">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.SquashFs.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Streams">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Swap">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Swap.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Udf">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Udf.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Vdi">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Vdi.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Vhd">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Vhd.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Vhdx">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Vhdx.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Vmdk">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Vmdk.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Wim">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Wim.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Xfs">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Xfs.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Xva">
+      <HintPath>..\DiscUtils\Library\DiscUtils\bin\Debug\netstandard2.0\DiscUtils.Xva.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
