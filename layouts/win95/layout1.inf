@@ -1,0 +1,252 @@
+;*** BEGIN **********************************************************
+;**                                                                **
+;** Automatically generated on: Thu Aug 22 23:58:18 1996           **
+;**                                                                **
+;** Diamond Version: (32) 1.00.0530 (03/29/95)                     **
+;**                                                                **
+;*** BEGIN **********************************************************
+;LAYOUT.INF
+;Disk Layout file for Windows 95 Setup
+;Copyright (c) 1993-1995 Microsoft Corporation
+
+[version]
+signature="$CHICAGO$"
+SetupClass=BASE
+
+[DosAppVersion]
+; Version specific files should be listed here
+emm386.exe,-1,-1
+himem.sys,-1,-1
+ramdrive.sys,-1,-1
+smartdrv.exe,-1,-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[SourceDisksNames]
+; Cabinet file names and associated disks
+; <cab#> = <disk#>,<cabinet filename>, ID (Unused, must be 0)
+1="Windows 95 Disk1","PRECOPY1.CAB",0
+2="Windows 95 Disk2","PRECOPY2.CAB",0
+3="Windows 95 Disk2","win95_02.cab",0
+4="Windows 95 Disk3","win95_03.cab",0
+5="Windows 95 Disk4","win95_04.cab",0
+6="Windows 95 Disk5","win95_05.cab",0
+7="Windows 95 Disk6","win95_06.cab",0
+8="Windows 95 Disk7","win95_07.cab",0
+9="Windows 95 Disk8","win95_08.cab",0
+10="Windows 95 Disk9","win95_09.cab",0
+11="Windows 95 Disk10","win95_10.cab",0
+12="Windows 95 Disk11","win95_11.cab",0
+13="Windows 95 Disk12","win95_12.cab",0
+14="Windows 95 Disk13","win95_13.cab",0
+15="Windows 95 Disk14","win95_14.cab",0
+16="Windows 95 Disk15","win95_15.cab",0
+17="Windows 95 Disk16","win95_16.cab",0
+18="Windows 95 Disk17","win95_17.cab",0
+19="Windows 95 Disk18","win95_18.cab",0
+20="Windows 95 Disk19","win95_19.cab",0
+21="Windows 95 Disk20","win95_20.cab",0
+22="Windows 95 Disk21","win95_21.cab",0
+23="Windows 95 Disk22","win95_22.cab",0
+24="Windows 95 Disk23","win95_23.cab",0
+25="Windows 95 Disk24","win95_24.cab",0
+26="Windows 95 Disk25","win95_25.cab",0
+27="Windows 95 Disk26","win95_26.cab",0
+28="Windows 95 Disk27","win95_27.cab",0
+29="Windows 95 Disk28","win95_28.cab",0
+[SourceDisksFiles]
+mswebndi.dll=1,,2832
+msnetmtg.inf=2,,27471
+mswebsvr.inf=2,,32012
+lhacm.acm=13,,38912
+obscure.bmp=13,,3158
+~ftpsvc~.ckm=13,,43
+conflnk.dll=13,,51200
+ctl3dv2.dll=13,,27632
+gcc32.dll=14,,4608
+gccnc.dll=14,,317952
+mcatipx.dll=14,,156160
+mcatpstn.dll=14,,116736
+mcs32.dll=14,,4608
+mcsnc.dll=14,,202240
+msconf.dll=14,,47104
+msiprt.dll=14,,10752
+msmcstcp.dll=14,,17920
+nac.dll=14,,70144
+ossapi.dll=14,,86016
+ossmem.dll=14,,17920
+soedber.dll=14,,114688
+soedper.dll=14,,126464
+ulclient.dll=14,,68608
+cb32.exe=14,,304128
+conf.exe=14,,462336
+msconfft.exe=14,,101888
+wb32.exe=14,,641536
+blip.wav=14,,21260
+ringin.wav=14,,10026
+mnmvdd.386=15,,5291,1588
+confcp.dll=15,,113664
+mnmal_.dll=15,,15376
+mnmccl_.dll=15,,68880
+mnmclp_.dll=15,,13760
+mnmclpm_.dll=15,,63200
+mnmcmg_.dll=15,,18688
+mnmcpi_.dll=15,,4416
+mnmcpi32.dll=15,,29696
+mnmft_.dll=15,,56688
+mnmgdc_.dll=15,,11040
+mnmhlp_.dll=16,,6368
+mnmmg_.dll=16,,26928
+mnmmsg_.dll=16,,7824
+mnmnet_.dll=16,,53248
+mnmom_.dll=16,,69856
+mnmshco_.dll=16,,294736
+mnmtapm_.dll=16,,25600
+mnmtdd_.dll=16,,9872
+mnmtddm_.dll=16,,18448
+mnmtddn_.dll=16,,15280
+mnmtdds_.dll=16,,13360
+mnmthk16.dll=16,,26544
+mnmtph16.dll=16,,2544
+mnmtph32.dll=16,,7680
+mnmut_.dll=16,,55408
+mnmwb_.dll=16,,32640
+rrcm.dll=16,,31744
+mnmalp.exe=16,,5152
+mnmnet.exe=16,,4464
+mnmom.exe=16,,5632
+mnmshco.exe=16,,4416
+ulsvc.exe=16,,39936
+type.wav=16,,9200
+mswebcpl.cpl=20,,28160
+counter.dll=20,,5632
+ftpmib.dll=20,,7648
+ftpsapi2.dll=20,,8192
+ftpsvc2.dll=20,,54784
+htmla.dll=20,,50688
+httpmib.dll=20,,7664
+httpodbc.dll=20,,34816
+infoadmn.dll=20,,29184
+infocomm.dll=20,,112640
+mswebab.dll=21,,24576
+mswebapi.dll=21,,18432
+w3svapi.dll=21,,8192
+w3svc.dll=21,,108544
+wsadmin.dll=21,,23040
+inetsw95.exe=21,,15872
+mswebndi.exe=21,,7184
+svctrl.exe=24,,7680
+adv0.gif=24,,245
+adv1.gif=24,,285
+bolt.gif=24,,1052
+cf.gif=24,,884
+deny.gif=24,,173
+dir0.gif=24,,247
+dir1.gif=24,,285
+f.gif=24,,131
+fd.gif=24,,882
+ftp.gif=24,,139
+g.gif=24,,145
+gopher.gif=24,,153
+grant.gif=24,,153
+groups0.gif=24,,184
+groups1.gif=24,,210
+grpcomp.gif=24,,163
+hand.gif=24,,103
+hd.gif=24,,883
+house_t.gif=24,,952
+iis_t.gif=24,,2408
+iis2_t.gif=24,,2408
+lin.gif=24,,159
+log0.gif=24,,235
+log1.gif=24,,264
+msg0.gif=24,,245
+msg1.gif=24,,280
+nd.gif=24,,886
+of.gif=24,,891
+ok.gif=24,,244
+powrbybo.gif=24,,2456
+serv0.gif=24,,221
+serv1.gif=24,,247
+sngcomp.gif=24,,166
+spec1.gif=24,,2433
+spec2.gif=24,,6270
+users0.gif=24,,172
+users1.gif=24,,196
+usrgrp0.gif=24,,205
+usrgrp1.gif=24,,224
+world_t.gif=24,,1101
+www.gif=24,,165
+mswebcpl.hlp=24,,10613
+admin.htm=24,,8442
+default.htm=24,,1154
+ftpserv.htm=24,,3187
+getstart.htm=24,,4715
+htmla.htm=24,,3435
+webserv.htm=24,,674
+adv.htr=24,,4431
+advaddd.htr=24,,1460
+advadddu.htr=24,,788
+advaddg.htr=24,,1460
+advaddgu.htr=24,,789
+advded.htr=24,,603
+advdeg.htr=24,,603
+advdeny.htr=24,,1184
+advdeny2.htr=24,,239
+advedd.htr=24,,1503
+adveddu.htr=24,,797
+advedg.htr=24,,1516
+advedgu.htr=24,,798
+advgrant.htr=24,,240
+advu.htr=24,,390
+bdir.htr=24,,1910
+bdiru.htr=24,,1021
+conn.htr=24,,1398
+dir.htr=24,,4275
+diradd.htr=24,,4576
+diraddu.htr=24,,2281
+dirdel.htr=24,,568
+diredt.htr=24,,4490
+diredtu.htr=24,,2216
+diru.htr=24,,449
+dirv.htr=24,,76
+disc.htr=24,,226
+disca.htr=24,,216
+htmla.htr=24,,3682
+log.htr=24,,3399
+logu.htr=24,,2060
+msg.htr=24,,1947
+msgu.htr=24,,353
+serv.htr=24,,4682
+servu.htr=24,,1114
+htmla.inf=24,,12822
+htmla2.inf=24,,12340
+ftp.mib=24,,6136
+http.mib=24,,8477
+inetsrv.mib=24,,690
+mswebsp.vxd=24,,14469

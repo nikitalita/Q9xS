@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,6 +11,13 @@
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="DiscUtils" Version="0.16.4" />
     <PackageReference Include="Markdown" Version="2.2.1" />
+    <PackageReference Include="UnshieldSharp" Version="1.6.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="layouts\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
