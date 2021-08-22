@@ -1,34 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using DiscUtils;
-using DiscUtils.Iso9660;
-using System.Text.RegularExpressions;
+using CommandLine;
 
 namespace Q9xS
 {
+    class Options
+    {
+        [Value(0, Required = true, MetaName = "updatePath", HelpText = "Path to updates directory.")]
+        public string UpdatePath { get; set; }
+
+        [Value(1, Required = true, MetaName = "isoPath", HelpText = "Path to Windows 9x/ME installation CD ISO.")]
+        public string IsoPath { get; set; }
+
+        [Option('o', "output",
+          HelpText = "Path of output CD-ROM")]
+        public string OutputPath { get; set; }
+
+        [Option('w', "working-dir",
+          HelpText = "Specifies path of working directory for updating. Otherwise uses a temporary directory")]
+        public string WorkingDir { get; set; }
+
+        [Option("no-clean",
+          Default = false,
+          HelpText = "Path of output CD-ROM")]
+        public bool NoClean { get; set; }
+    }
+
     class Program
     {
+        static Options options;
         static void Main(string[] args)
         {
+            bool extract = true;
+            var result = Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(o => options = o)
+                .WithNotParsed(errs =>
+                {
+                    Console.WriteLine(Parser.Default.Settings.HelpWriter.ToString());
+                    Environment.Exit(-1);
+                });
+
+            if (string.IsNullOrWhiteSpace(options.WorkingDir))
+            {
+                options.WorkingDir = Path.Join(Path.GetTempPath(), Path.GetRandomFileName());
+            }
+            else
+            {
+                options.WorkingDir = Path.Join(options.WorkingDir, "build");
+            }
             try
             {
-                if (args.Length < 2)
-                {
-                    throw new ArgumentException("One of your arguments are missing\n" +
-                        "The correct syntax is: dotnet Q9xS updatePath isoPath");
-                }
+                string extractedIsoPath = Path.Join(
+                    options.WorkingDir,
+                    Path.GetFileNameWithoutExtension(options.IsoPath)
+                );
 
-                Program self = new Program();
-                bool extract = true;
-                string updatePath = args[0];
-                string isoPath = args[1];
-                string extractedIsoPath = Path.GetFileNameWithoutExtension(isoPath);
+                if (!Directory.Exists(options.UpdatePath))
+                    throw new FileNotFoundException(options.UpdatePath + " does not exist");
 
-                if (!Directory.Exists(updatePath))
-                    throw new FileNotFoundException(updatePath + " does not exist");
-
-                if (!File.Exists(isoPath))
-                    throw new FileNotFoundException(isoPath + " does not exist");
+                if (!File.Exists(options.IsoPath))
+                    throw new FileNotFoundException(options.IsoPath + " does not exist");
 
                 if (Directory.Exists(extractedIsoPath))
                 {
@@ -40,195 +72,24 @@ namespace Q9xS
                 }
 
                 if (extract)
-                    self.ExtractISO(isoPath, extractedIsoPath);
+                    Q9xS.ExtractISO(options.IsoPath, extractedIsoPath);
 
-                self.Update9xDir(updatePath, extractedIsoPath);
-                self.CreateISO(extractedIsoPath);
+                Q9xS.Update9xDir(options.UpdatePath, extractedIsoPath);
+                Q9xS.CreateISO(extractedIsoPath, options.OutputPath);
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Error: " + e.Message);
             }
-        }
-
-        public void Update9xDir(string updatesDir, string extracted9xDir) {
-            bool updated = false;
-
-            string subDir = null;
-            if (Directory.Exists(extracted9xDir+@"\Win95"))
-                subDir = extracted9xDir + @"\Win95";
-            else if (Directory.Exists(extracted9xDir+@"\Win98"))
-                subDir = extracted9xDir + @"\Win98";
-            else if (Directory.Exists(extracted9xDir+@"\Win9x"))
-                subDir = extracted9xDir + @"\Win9x";
-            else
+            finally
             {
-                throw new DirectoryNotFoundException(extracted9xDir + " is not an extracted windows iso");
-            }
-
-            string subDirName = new DirectoryInfo(subDir).Name;
-            string layoutPath = subDir + @"\layout.inf";
-            string layout1Path = subDir + @"\layout1.inf";
-            string layout2Path = subDir + @"\layout2.inf";
-
-            CopyFreshLayoutInf(layoutPath, subDirName);
-
-            if (File.Exists(@"layouts\" + subDirName + @"\layout1.inf"))
-                CopyFreshLayoutInf(layout1Path, subDirName);
-
-            if (File.Exists(@"layouts\" + subDirName + @"\layout2.inf"))
-                CopyFreshLayoutInf(layout2Path, subDirName);
-
-            foreach (string update in Directory.GetFiles(updatesDir))
-            {
-                string copyTo = subDir + @"\" + Path.GetFileName(update);
-                FileInfo updateInfo = new FileInfo(update);
-                FileInfo copyToInfo = new FileInfo(copyTo);
-                if (!File.Exists(copyTo) || updateInfo.LastWriteTime > copyToInfo.LastWriteTime)
+                if (!options.NoClean && Directory.Exists(options.WorkingDir))
                 {
-                    updated = true;
-                    updateInfo.Attributes = FileAttributes.Normal;
-                    updateInfo.CopyTo(copyToInfo.FullName, true);
-                    copyToInfo.Attributes = FileAttributes.Normal;
-                    Console.WriteLine(updateInfo.FullName + " was copied to " + copyToInfo.FullName);
+                    Console.WriteLine("Cleaning working directory " + options.WorkingDir);
+                    Directory.Delete(options.WorkingDir, true);
                 }
-            }
-
-            // begin updating layout(s)
-            if (updated)
-            {
-                string[] updatedSubDirFiles = Directory.GetFiles(subDir);
-                UpdateLayout(updatedSubDirFiles, layoutPath);
-
-                if (File.Exists(layout1Path))
-                    UpdateLayout(updatedSubDirFiles, layout1Path);
-
-                if (File.Exists(layout2Path))
-                    UpdateLayout(updatedSubDirFiles, layout2Path);
-            }
-        }
-
-        public void CopyFreshLayoutInf(string layoutPath, string subDirName)
-        {
-            if (!File.Exists(layoutPath))
-            {
-                string layoutCopyFromPath = @"layouts\" + subDirName + @"\" + Path.GetFileName(layoutPath);
-                if (!File.Exists(layoutCopyFromPath))
-                {
-                    throw new FileNotFoundException(layoutCopyFromPath + " does not exist.\n" +
-                        "Make sure that you have the layouts folder in the same directory" +
-                        "as this application.");
-                }
-                Console.WriteLine(layoutPath + " does not exist, copying a fresh one...");
-                File.Copy(layoutCopyFromPath, layoutPath);
-            }
-        }
-
-        public void UpdateLayout(string[] updatedSubDirFiles, string layoutToUpdatePath)
-        {
-            string layoutText = File.ReadAllText(layoutToUpdatePath);
-
-            foreach (string file in updatedSubDirFiles)
-            {
-                string fileName = Path.GetFileName(file);
-                long fileSize = new FileInfo(file).Length;
-                for(int i = 0; i < 29; i++)
-                {
-                    string regEx = fileName + @"=" + i + @",,[1-9]*";
-                    Match match = Regex.Match(layoutText, regEx, RegexOptions.IgnoreCase);
-                    if (match.Success)
-                    {
-                        layoutText = Regex.Replace(layoutText, regEx, fileName + "=" + i +",," + fileSize, RegexOptions.IgnoreCase);
-                        break;
-                    }
-                }
-                Console.WriteLine("Layout entry for " + fileName + " updated.");
-            }
-
-            File.WriteAllText(layoutToUpdatePath, layoutText);
-            Console.WriteLine(layoutToUpdatePath + " successfully updated.");
-        }
-
-        public CDBuilder AddToIso(CDBuilder builder, string dirToIso)
-        {
-            foreach (string directory in Directory.GetDirectories(dirToIso))
-            {
-                AddToIso(builder, directory);
-            }
-            foreach (string file in Directory.GetFiles(dirToIso))
-            {
-                Stream file2add = File.Open(file, FileMode.Open);
-                string file2addPath = file.Substring(file.IndexOf(@"\", 1) + 1);
-                builder.AddFile(file2addPath, file2add);
-                Console.WriteLine(file2addPath + " was added to the iso.");
-            }
-            return builder;
-        }
-
-        public void CreateISO(string dirToIso)
-        {
-            CDBuilder builder = new CDBuilder
-            {
-                UseJoliet = true,
-                VolumeIdentifier = "WIN_9X"
-            };
-
-            builder = AddToIso(builder, dirToIso);
-            builder.Build(Path.GetFileNameWithoutExtension(dirToIso)+"_slip.iso");
-            Console.WriteLine(Path.GetFileNameWithoutExtension(dirToIso+".iso successfully updated."));
-        }
-
-        public void ExtractISO(string toExtract, string folderName)
-        {
-            CDReader Reader = new CDReader(File.Open(toExtract, FileMode.Open), true);
-            ExtractDirectory(Reader.Root, folderName + "\\", "");
-            Console.WriteLine(toExtract + " was succesfully extracted.");
-            Reader.Dispose();
-        }
-
-        public void ExtractDirectory(DiscDirectoryInfo Dinfo, string RootPath, string PathinISO)
-        {
-            if (!string.IsNullOrWhiteSpace(PathinISO))
-            {
-                PathinISO += "\\" + Dinfo.Name;
-            }
-            RootPath += "\\" + Dinfo.Name;
-            AppendDirectory(RootPath);
-            foreach (DiscDirectoryInfo dinfo in Dinfo.GetDirectories())
-            {
-                ExtractDirectory(dinfo, RootPath, PathinISO);
-            }
-            foreach (DiscFileInfo finfo in Dinfo.GetFiles())
-            {
-                using (Stream FileStr = finfo.OpenRead())
-                {
-                    char[] charsToRemove = { ';', '1' };
-                    string fileName = finfo.Name.TrimEnd(charsToRemove);
-                    using (FileStream Fs = File.Create(RootPath + "\\" + fileName))
-                    {
-                        FileStr.CopyTo(Fs, 4 * 1024);
-                        Console.WriteLine(fileName + " was extracted.");
-                    }
-                }
-            }
-        }
-
-        static void AppendDirectory(string path)
-        {
-            try
-            {
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-            }
-            catch (DirectoryNotFoundException)
-            {
-                AppendDirectory(Path.GetDirectoryName(path));
-            }
-            catch (PathTooLongException)
-            {
-                AppendDirectory(Path.GetDirectoryName(path));
+                    
             }
         }
     }
