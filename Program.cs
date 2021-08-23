@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using CommandLine;
 
@@ -25,6 +24,11 @@ namespace Q9xS
           Default = false,
           HelpText = "Path of output CD-ROM")]
         public bool NoClean { get; set; }
+        
+        [Option('f', "force",
+          Default = false,
+          HelpText = "If working build dir exists, overwrite without confirmation.")]
+        public bool Force { get; set; }
     }
 
     class Program
@@ -47,7 +51,8 @@ namespace Q9xS
             }
             else
             {
-                options.WorkingDir = Path.Join(options.WorkingDir, "build");
+                // add "Q9xS-build" to a user specified dir, so we don't wipe out anything while cleaning
+                options.WorkingDir = Path.Join(options.WorkingDir, "Q9xS-build");
             }
             try
             {
@@ -64,12 +69,20 @@ namespace Q9xS
 
                 if (Directory.Exists(extractedIsoPath))
                 {
-                    Console.WriteLine(@"It looks like you've already extracted the iso. Would you like to re-extract? [y/any other key]");
-                    string response = Console.ReadLine();
+                    if (!options.Force)
+                    {
+                        Console.WriteLine(@"It looks like you've already extracted the iso. Would you like to re-extract? [y/any other key]");
+                        string response = Console.ReadLine();
 
-                    if (!string.Equals(response, "y", StringComparison.OrdinalIgnoreCase))
-                        extract = false;
+                        if (!string.Equals(response, "y", StringComparison.OrdinalIgnoreCase))
+                            extract = false;
+                    }
+                    if (extract)
+                    {
+                        Directory.Delete(extractedIsoPath, true);
+                    }
                 }
+                Q9xS.ExtractBootImage(options.IsoPath, options.WorkingDir);
 
                 if (extract)
                     Q9xS.ExtractISO(options.IsoPath, extractedIsoPath);

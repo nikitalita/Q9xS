@@ -9,6 +9,10 @@ namespace Q9xS
     static class Q9xS
     {
         static readonly string layoutsDir = Path.Join(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "layouts");
+        static BootDeviceEmulation emu = BootDeviceEmulation.NoEmulation;
+        static int bootLoadSegment = 0;
+        static string bootImagePath = "";
+        static long bootImageStart = 0;
         public static void Update9xDir(string updatesDir, string extracted9xDir)
         {
             bool updated = false;
@@ -147,8 +151,50 @@ namespace Q9xS
 
             builder = AddToIso(builder, dirToIso);
 
+            FileStream bootImage = null;
+            if (File.Exists(bootImagePath))
+            {
+                bootImage = File.OpenRead(bootImagePath);
+                builder.ManufacturerId = "Microsoft Corporation";
+                builder.SetBootImage(bootImage, emu, bootLoadSegment);
+            }
+
             builder.Build(outputPath);
+            if (bootImage != null)
+            {
+                bootImage.Close();
+            }
             Console.WriteLine(outputPath + " successfully created.");
+        }
+        public static void ExtractBootImage(string toExtract, string folderPath)
+        {
+            var isoFile = File.Open(toExtract, FileMode.Open);
+            CDReader Reader = new CDReader(isoFile, true);
+            if (Reader.HasBootImage)
+            {
+                emu = Reader.BootEmulation;
+                bootLoadSegment = Reader.BootLoadSegment;
+                bootImageStart = Reader.BootImageStart;
+                using var read = Reader.OpenBootImage();
+                int imagelength = (int)read.Length;
+                var buffer = new byte[imagelength];
+                read.Read(buffer,0,imagelength);
+                read.Close();
+
+                bootImagePath = Path.Join(folderPath, "boot.img");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                using var binWriter = new BinaryWriter(File.Open(bootImagePath, FileMode.Create));
+                binWriter.Write(buffer);
+                binWriter.Close();
+                Console.WriteLine("Boot image was succesfully extracted from ISO.");
+            }
+            
+            Reader.Dispose();
+            isoFile.Close();
         }
 
         public static void ExtractISO(string toExtract, string folderPath)
@@ -189,7 +235,7 @@ namespace Q9xS
             }
         }
 
-        static void ForceMkdirp(string path)
+        public static void ForceMkdirp(string path)
         {
             try
             {
